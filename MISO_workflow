@@ -1,0 +1,12 @@
+for i in $(cat /home/591608/HUVEC_list_paired.txt); 
+do 
+esearch -db sra -query $i  | efetch -format runinfo | cut -d ',' -f 1 | grep SRR > HACAT_LISTS/$i\_list.txt
+for x in $(cat /home/591608/HACAT_LISTS/$i\_list.txt);
+do 
+fastq-dump --split-files 2 --outdir /home/591608/Hacat_fastq/$x  $x 
+STAR --runThreadN 6 --runMode alignReads --genomeDir /home/591608/genome --readFilesIn /home/591608/Hacat_fastq/paired/$x/$x\.fastq  --quantMode TranscriptomeSAM GeneCounts --outFileNamePrefix /home/591608/Hacat/unpaired/$x --outSAMtype BAM SortedByCoordinate --outSAMunmapped None --outSAMattributes Standard; done; done
+sam_to_bam --convert /home/591608/Platelet/SRP332124/$i.Aligned.out.sam home/591608/misobams/SRP332124
+miso --run indexed2/ home/591608/misobams/SRP332124/$i.Aligned.out.sorted.bam  --output-dir misoresults/$i/ --read-len 150 --settings-filename MISO/misopy/settings/miso_settings.txt
+
+sashimi_plot --plot-event "gene:ENSG00000058272" indexed/ MISO/misopy/sashimi_plot/settings/sashimi_plot_settings.txt  --output-dir testplot;
+done ; done
