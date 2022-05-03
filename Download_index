@@ -1,0 +1,3 @@
+wget http://ftp.ensembl.org/pub/release-100/gff3/homo_sapiens/Homo_sapiens.GRCh38.100.gff3.gz
+gunzip Homo_sapiens.GRCh38.100.gff3.gz
+index_gff --index Homo_sapiens.GRCh38.100.gff3 indexed/
